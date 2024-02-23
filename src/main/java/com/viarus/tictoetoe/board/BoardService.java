@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class BoardService {
@@ -18,8 +19,10 @@ public class BoardService {
         return boardRepository.findAll();
     }
 
-    public Board getBoard(String boardId) {
-        return boardRepository.findById(boardId).isPresent() ?
-                boardRepository.findBoardById(boardId).get() : new Board();
+    public Optional<Board> getBoardFromId(String boardId) {
+        return boardRepository.findBoardById(boardId);
+    }
+    public Optional<Board> getBoardFromPlayer(String playerName) {
+        return boardRepository.findBoardByPlayerNamesContaining(playerName);
     }
 }

@@ -32,7 +32,7 @@ public class TicToeToeApplication {
 					false
 			);
 			//boardRepository.insert(board);
-			boardRepository.findBoardById("65d7d3b6e3ca2f5099722ada")
+			boardRepository.findBoardByPlayerNamesContaining("A123")
 					.ifPresent(s -> System.out.println(s));
 		};
 	}
