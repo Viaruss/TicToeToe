@@ -1,7 +1,5 @@
 package com.viarus.tictoetoe;
 
-import com.viarus.tictoetoe.board.Board;
-import com.viarus.tictoetoe.board.BoardFields;
 import com.viarus.tictoetoe.board.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -9,8 +7,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @SpringBootApplication
 @RestController
@@ -25,12 +21,12 @@ public class TicToeToeApplication {
 	@Bean
 	CommandLineRunner runner(){
 		return args -> {
-			Board board = new Board(
-					new BoardFields("x","o","x","o","x","o","x","o","x"),
-					List.of("abc653", "awn531"),
-					"X",
-					false
-			);
+//			Board board = new Board(
+//					new BoardFields("x","o","x","o","x","o","x","o","x"),
+//					List.of("abc653", "awn531"),
+//					"X",
+//					false
+//			);
 			//boardRepository.insert(board);
 			boardRepository.findBoardByPlayerNamesContaining("A123")
 					.ifPresent(s -> System.out.println(s));

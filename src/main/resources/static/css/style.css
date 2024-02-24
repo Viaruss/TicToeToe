@@ -1,10 +1,21 @@
 body{
     background: #242b4e;
     color: #666;
+    font-family: Tahoma, sans-serif;
 }
 h1{
     text-align: center;
     color: #fff;
+    font-size: 40px;
+}
+#playerInfo{
+    text-align: center;
+}
+h2{
+    text-align: center;
+    display: inline;
+    color: #fff;
+    font-size: 20px;
 }
 .clearfix{
     clear: both;
@@ -12,7 +23,7 @@ h1{
 #box{
     width: 350px;
     overflow: auto;
-    margin: 40px auto;
+    margin: 20px auto;
     background: #666;
     padding-bottom: 40px;
     border-radius: 10px;

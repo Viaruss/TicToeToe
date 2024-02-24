@@ -25,7 +25,6 @@ public class BoardController {
         Optional<Board> board = boardService.getBoardFromId(boardId);
         return board.orElse(null);
     }
-
     @GetMapping(path = "get/fromPlayer/{playerName}")
     public Board getBoardFromPlayer(@PathVariable("playerName") String playerName){
         Optional<Board> board = boardService.getBoardFromPlayer(playerName);
