@@ -9,11 +9,30 @@
 </head>
 
 <body>
-<div id="popUpBox" class="popUp">
-    <div id="nameInputBox">
+<div id="popUpBox" class="popUpContainer">
+    <div id="nameInputBox" class="popUp">
         <h1 id="nameInputTitle">Input player name to begin</h1>
         <input type="text" id="nameInputField" placeholder="Player Name">
         <input type="submit" id="nameInputSubmit">
+    </div>
+</div>
+
+<div id="popUpBox2" class="popUpContainer">
+    <div id="nameInputBox2" class="popUp">
+        <h1 id="nameInputTitle2">Who do you want to join?</h1>
+        <input type="text" id="nameInputField2" placeholder="Player Name">
+        <input type="submit" id="nameInputSubmit2">
+    </div>
+</div>
+
+<div id="noBoardBox" class="popUpContainer">
+    <div id="noBoard" class="popUp">
+        <h1>-No active game found-</h1>
+        <h2>What You want to do?</h2>
+        <div id="decisionBox">
+            <button id="newGameButton">Create new game</button>
+            <button id="joinGameButton">Join existing game</button>
+        </div>
     </div>
 </div>
 
