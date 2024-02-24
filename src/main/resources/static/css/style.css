@@ -1,22 +1,81 @@
+.board{
+    display: none;
+}
+
+#popUpBox{
+    display: block;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+}
+
+#nameInputBox{
+    display: inline-block;
+    margin: 25% auto;
+    text-align: center;
+    background: #666;
+    border-radius: 20px;
+    padding: 20px;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+#nameInputField {
+    color: #fff;
+    background: inherit;
+    border: 0;
+    border-bottom: 3px solid #444444;
+    font-family: Tahoma, sans-serif;
+    padding: 5px 0;
+    font-size: 1.3rem;
+    width: 70%;
+    transition: border-bottom-color 0.5s;
+    outline: 0;
+    margin-bottom: 10px;
+}
+
+#nameInputField:-webkit-autofill, :-webkit-autofill:focus {
+    transition: background-color 600000s 0s, color 600000s 0s;
+}
+
+#nameInputField::placeholder {
+    opacity: 0.5;
+    color: #fff;
+}
+
+#nameInputField[data-autocompleted] {
+    background-color: transparent !important;
+}
+
+#nameInputSubmit{
+    padding: 10px;
+}
+
 body{
     background: #242b4e;
     color: #666;
     font-family: Tahoma, sans-serif;
 }
+
 h1{
     text-align: center;
     color: #fff;
     font-size: 40px;
 }
+
 #playerInfo{
     text-align: center;
 }
+
 h2{
     text-align: center;
     display: inline;
     color: #fff;
     font-size: 20px;
 }
+
 .clearfix{
     clear: both;
 }
@@ -26,12 +85,15 @@ h2{
     margin: 20px auto;
     background: #666;
     padding-bottom: 40px;
-    border-radius: 10px;
+    padding-top: 20px;
+    border-radius: 20px;
 }
+
 #message{
     background: #333;
     color: #fff;
 }
+
 #gameBoard li{
     float: left;
     margin: 10px;
@@ -44,11 +106,13 @@ h2{
     text-align: center;
     border-radius: 5px;
 }
-#gameBoard li:hover, #reset:hover{
+
+#gameBoard li:hover, #reset:hover, #nameInputSubmit:hover{
     cursor: pointer;
     background: #000000;
 }
-#reset{
+
+#reset, #nameInputSubmit{
     border: 0;
     background: #444;
     color: #fff;
@@ -56,12 +120,15 @@ h2{
     padding: 15px;
     border-radius: 5px;
 }
+
 .o{
     color: green !important;
 }
+
 .x{
     color: red !important;
 }
+
 footer{
     display: block;
     text-align: center;

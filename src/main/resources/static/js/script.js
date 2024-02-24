@@ -1,19 +1,29 @@
 $(document).ready(function() {
 
-    let playerName = prompt("Whats Your name?", "player name")
+    $("#nameInputSubmit").click(function (){
+        if(document.getElementById("nameInputField").value === ""){
+            alert("please enter a name")
+        } else {
+            updateBoard()
+            $(".popUp").fadeOut()
+            $(".board").fadeIn()
+        }
+    })
 
-    fetch("http://localhost:8080/api/v1/board/get/fromPlayer/" + playerName)
-        .then(resp => resp.json())
-        .then(json => {
-            $("#player1").text(json["playerNames"][0])
-            $("#player2").text(json["playerNames"][1])
-            $("#title").text(json["nowMoving"] + ' turn')
-            let htmlFields = document.getElementById("gameBoard").children
-            for(let i = 0; i < htmlFields.length; i++) {
-                htmlFields.item(i).textContent = json["fields"][i]
-            }
-        })
-
+    function updateBoard(){
+        let playerName = document.getElementById("nameInputField").value
+        fetch("http://localhost:8080/api/v1/board/get/fromPlayer/" + playerName)
+            .then(resp => resp.json())
+            .then(json => {
+                $("#player1").text(json["playerNames"][0])
+                $("#player2").text(json["playerNames"][1])
+                $("#title").text(json["nowMoving"] + ' turn')
+                let htmlFields = document.getElementById("gameBoard").children
+                for(let i = 0; i < htmlFields.length; i++) {
+                    htmlFields.item(i).textContent = json["fields"][i]
+                }
+            })
+    }
 
 
 //temp
@@ -27,4 +37,5 @@ $(document).ready(function() {
         $("#title").text('X turn')
         $(".tic").text('')
     })
+
 })
