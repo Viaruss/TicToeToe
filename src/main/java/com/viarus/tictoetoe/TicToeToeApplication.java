@@ -21,15 +21,6 @@ public class TicToeToeApplication {
 	@Bean
 	CommandLineRunner runner(){
 		return args -> {
-//			Board board = new Board(
-//					new BoardFields("x","o","x","o","x","o","x","o","x"),
-//					List.of("abc653", "awn531"),
-//					"X",
-//					false
-//			);
-			//boardRepository.insert(board);
-			boardRepository.findBoardByPlayerNamesContaining("A123")
-					.ifPresent(s -> System.out.println(s));
 		};
 	}
 }

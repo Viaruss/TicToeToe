@@ -24,4 +24,13 @@ public class BoardService {
     public Optional<Board> getBoardFromPlayer(String playerName) {
         return boardRepository.findBoardByPlayerNamesContaining(playerName);
     }
+    public boolean doesBoardExist(String playerName) {
+        return boardRepository.findBoardByPlayerNamesContaining(playerName).isPresent();
+    }
+    public void createBoard(Board board){
+        boardRepository.insert(board);
+    }
+    public void joinBoard(Board board){
+        boardRepository.save(board);
+    }
 }

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -29,5 +30,32 @@ public class BoardController {
     public Board getBoardFromPlayer(@PathVariable("playerName") String playerName){
         Optional<Board> board = boardService.getBoardFromPlayer(playerName);
         return board.orElse(null);
+    }
+    @GetMapping(path = "ifExists/fromPlayer/{playerName}")
+    public boolean checkIfExists(@PathVariable("playerName") String playerName) {
+        return boardService.doesBoardExist(playerName);
+    }
+
+    @GetMapping(path = "get/new/{playerName}")
+    public Board createBoard(@PathVariable("playerName") String playerName){
+        Board board = new Board(
+                List.of("","","","","","","","",""),
+				List.of(playerName),
+				"X",
+				false
+        );
+        boardService.createBoard(board);
+        return board;
+    }
+    @GetMapping(path = "/joinGame/{playerName}/{joiningPlayerName}")
+    public boolean joinGame(@PathVariable("playerName") String playerName, @PathVariable("joiningPlayerName") String joiningPlayerName) {
+        try{
+            Board board = boardService.getBoardFromPlayer(playerName).orElseThrow();
+            board.setPlayerNames(List.of(playerName, joiningPlayerName));
+            boardService.joinBoard(board);
+            return true;
+        } catch (NoSuchElementException e){
+            return false;
+        }
     }
 }
