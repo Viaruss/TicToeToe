@@ -1,12 +1,16 @@
 $(document).ready(function() {
 
+    let board, yourTurn, yourName
+
     $("#nameInputSubmit").click(async function(){
-        if(document.getElementById("nameInputField").value === ""){
+        yourName = document.getElementById("nameInputField").value
+        if(yourName === ""){
             alert("please enter a name")
         } else {
-            let exists = await doesBoardExist(document.getElementById("nameInputField").value)
+            let exists = await doesBoardExist(yourName)
             if(exists){
-                await updateBoard(document.getElementById("nameInputField").value)
+                await updateBoard(yourName)
+                await assertTurns()
                 $("#popUpBox").fadeOut()
                 $(".board").fadeIn()
             } else {
@@ -17,11 +21,11 @@ $(document).ready(function() {
     })
 
     $("#newGameButton").click(async function(){
-        const response = await fetch("http://localhost:8080/api/v1/board/get/new/" + document.getElementById("nameInputField").value)
+        const response = await fetch("http://localhost:8080/api/v1/board/get/new/" + yourName)
         if(!response.ok){
             alert("something went wrong, try again")
         } else {
-            await updateBoard(document.getElementById("nameInputField").value)
+            await updateBoard(yourName)
             $("#noBoardBox").fadeOut()
             $(".board").fadeIn()
         }
@@ -33,17 +37,17 @@ $(document).ready(function() {
     })
 
     $("#nameInputSubmit2").click(async function(){
-        if(document.getElementById("nameInputField").value === ""){
+        if(yourName === ""){
             alert("please enter a name")
         } else {
             const found = await doesBoardExist(document.getElementById("nameInputField2").value)
             if(found){
                 if(await updateBoard(document.getElementById("nameInputField2").value)){
                     const response = await fetch("http://localhost:8080/api/v1/board/joinGame/" + document.getElementById("nameInputField2").value +
-                        "/" + document.getElementById("nameInputField").value)
+                        "/" + yourName)
                     let success = await response.json()
                     if(success){
-                        await updateBoard(document.getElementById("nameInputField").value)
+                        await updateBoard(yourName)
                         $("#joinGameBox").fadeOut()
                         $(".board").fadeIn()
                     } else {
@@ -59,36 +63,58 @@ $(document).ready(function() {
         }
     })
 
+    $(".tic").click(function (){
+        if (this.textContent !== '') {
+            alert("field already taken!")
+        } else if(board["nowMoving"] !== yourTurn){
+            alert("wait for your turn!")
+        } else {
+            if(!makeMove(this.id)){
+                alert("something went wrong, try again")
+            }
+        }
+    })
+    function syncData(data){
+        $("#title").text(data["nowMoving"] + ' turn')
+        let htmlFields = document.getElementById("gameBoard").children
+        for(let i = 0; i < htmlFields.length; i++) {
+            htmlFields.item(i).textContent = data["fields"][i]
+        }
+        board = data
+    }
+
+    async function makeMove(atId){
+        let response = await fetch("http://localhost:8080/api/v1/board/move/" + board["id"] + "/" + atId)
+        let json = await response.json()
+        if (json !== undefined){
+            await syncData(json)
+            return true
+        }
+        return false
+    }
+
     async function doesBoardExist(playerName) {
         let response = await fetch("http://localhost:8080/api/v1/board/ifExists/fromPlayer/" + playerName)
         return await response.json()
     }
-
+    function assertTurns(){
+        yourTurn = ["X", "O"].at(board["playerNames"].indexOf(yourName))
+        $("#player1").text(board["playerNames"][0] + " - X")
+        $("#player2").text((board["playerNames"][1] !== undefined ? board["playerNames"][1] : "player 2") + " - O") //insert placeholder "player 2" if second player is not present yet
+    }
 
     async function updateBoard(playerName){
         let response = await fetch("http://localhost:8080/api/v1/board/get/fromPlayer/" + playerName)
         let json = await response.json()
-        if(json["playerNames"].length < 2 || json["playerNames"].includes(document.getElementById("nameInputField").value)){
-            $("#player1").text(json["playerNames"][0])
-            $("#player2").text(json["playerNames"][1])
-            $("#title").text(json["nowMoving"] + ' turn')
-            let htmlFields = document.getElementById("gameBoard").children
-            for(let i = 0; i < htmlFields.length; i++) {
-                htmlFields.item(i).textContent = json["fields"][i]
-            }
+        if(json["playerNames"].length < 2 || json["playerNames"].includes(yourName)){
+            syncData(json)
             return true
         } else {
             return false
         }
     }
 
-
 //temp
-    $(".tic").click(function (){
-        if (this.textContent === '') {
-            $("#title").text(this.textContent === 'X' ? 'O' : 'X' + ' turn')
-        }
-    })
 
     $("#reset").click(function clearBoard() {
         $("#title").text('X turn')

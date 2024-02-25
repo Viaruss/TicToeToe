@@ -30,7 +30,7 @@ public class BoardService {
     public void createBoard(Board board){
         boardRepository.insert(board);
     }
-    public void joinBoard(Board board){
+    public void updateBoard(Board board){
         boardRepository.save(board);
     }
 }

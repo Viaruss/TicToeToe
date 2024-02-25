@@ -1,6 +1,7 @@
 package com.viarus.tictoetoe.board;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
@@ -79,5 +80,11 @@ public class Board {
                 playerNames.get(0), playerNames.get(1),
                 nowMoving
         );
+    }
+
+    public void makeMove(String fieldIndex) {
+        fields.set(Integer.valueOf(fieldIndex), nowMoving);
+        nowMoving = nowMoving.equals("X") ? "O" : "X";
+        System.out.println("made move at index " + fieldIndex + " now moving: " + nowMoving);
     }
 }

@@ -52,10 +52,21 @@ public class BoardController {
         try{
             Board board = boardService.getBoardFromPlayer(playerName).orElseThrow();
             board.setPlayerNames(List.of(playerName, joiningPlayerName));
-            boardService.joinBoard(board);
+            boardService.updateBoard(board);
             return true;
         } catch (NoSuchElementException e){
             return false;
+        }
+    }
+    @GetMapping(path = "/move/{boardId}/{fieldIndex}")
+    public Board makeMove(@PathVariable("boardId") String boardId, @PathVariable("fieldIndex") String fieldIndex) {
+        try{
+            Board board = boardService.getBoardFromId(boardId).orElseThrow();
+            board.makeMove(fieldIndex);
+            boardService.updateBoard(board);
+            return board;
+        } catch (NoSuchElementException e){
+            return null;
         }
     }
 }
