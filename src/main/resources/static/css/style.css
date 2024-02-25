@@ -136,6 +136,9 @@ h2{
     border-radius: 5px;
     font: inherit;
 }
+#reset{
+    display: none;
+}
 
 .o{
     color: green !important;

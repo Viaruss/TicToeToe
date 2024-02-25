@@ -67,16 +67,19 @@ $(document).ready(function() {
     })
 
     $(".tic").click(function (){
-        if (this.textContent !== '') {
-            alert("field already taken!")
-        } else if(board["nowMoving"] !== yourTurn){
-            alert("wait for your turn!")
-        } else {
-            if(!makeMove(this.id)){
-                alert("something went wrong, try again")
+        if(board["state"] === "") {
+            if (this.textContent !== '') {
+                alert("field already taken!")
+            } else if(board["nowMoving"] !== yourTurn){
+                alert("wait for your turn!")
+            } else {
+                if(!makeMove(this.id)){
+                    alert("something went wrong, try again")
+                }
             }
         }
     })
+
     function syncData(data){
         $("#title").text(data["nowMoving"] + ' turn')
         let htmlFields = document.getElementById("gameBoard").children
@@ -87,10 +90,12 @@ $(document).ready(function() {
     }
 
     async function makeMove(atId){
-        let response = await fetch("http://localhost:8080/api/v1/board/move/" + board["id"] + "/" + atId)
-        let json = await response.json()
-        return json !== undefined;
-
+        if (board["state"] === ""){
+            let response = await fetch("http://localhost:8080/api/v1/board/move/" + board["id"] + "/" + atId)
+            let json = await response.json()
+            return json !== undefined;
+        }
+        return false
     }
 
     async function doesBoardExist(playerName) {
@@ -125,6 +130,19 @@ $(document).ready(function() {
                 if(document.getElementById("player2").value !== board["playerNames"][1] + " - O" && board["playerNames"][1] !== undefined){
                     $("#player2").text(board["playerNames"][1] + " - O")
                 }
+                if(board["state"] !== ""){
+                    if(board["state"] === "-")$("#title").text("Game is a draw")
+                    else{
+                        let winner = board["state"] === "X" ? board["playerNames"][0] : board["playerNames"][1]
+                        if(yourName === winner){
+                            alert("CONGRATULATIONS!!!")
+                        } else {
+                            alert("TRY AGAIN :c ")
+                        }
+                        $("#title").text(winner + " is the winner!")
+                    }
+                    $("#reset").fadeIn()
+                }
             })
         })
     }
@@ -132,8 +150,7 @@ $(document).ready(function() {
 //temp
 
     $("#reset").click(function clearBoard() {
-        $("#title").text('X turn')
-        $(".tic").text('')
+        $("#noBoardBox").fadeIn()
+        $(".board").fadeOut()
     })
-
 })

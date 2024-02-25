@@ -69,7 +69,7 @@ public class BoardController {
             board.makeMove(fieldIndex);
             boardService.updateBoard(board);
             simpMessagingTemplate.convertAndSend("/topic/gameplay/" + boardId, board);
-            System.out.println("should be sent");
+            if(!board.getState().isEmpty()) boardService.deleteBoard(board.getId());
             return true;
         } catch (NoSuchElementException e){
             return false;
