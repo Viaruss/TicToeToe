@@ -1,5 +1,6 @@
 package com.viarus.tictoetoe.board;
 
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,8 +15,10 @@ import java.util.Optional;
 public class BoardController {
 
     private final BoardService boardService;
-    public BoardController(BoardService boardService) {
+    private final SimpMessagingTemplate simpMessagingTemplate;
+    public BoardController(BoardService boardService, SimpMessagingTemplate simpMessagingTemplate) {
         this.boardService = boardService;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
     @GetMapping(path = "getAll")
     public List<Board> getAllBoards(){
@@ -42,7 +45,7 @@ public class BoardController {
                 List.of("","","","","","","","",""),
 				List.of(playerName),
 				"X",
-				false
+				""
         );
         boardService.createBoard(board);
         return board;
@@ -53,20 +56,23 @@ public class BoardController {
             Board board = boardService.getBoardFromPlayer(playerName).orElseThrow();
             board.setPlayerNames(List.of(playerName, joiningPlayerName));
             boardService.updateBoard(board);
+            simpMessagingTemplate.convertAndSend("/topic/gameplay/" + board.getId(), board);
             return true;
         } catch (NoSuchElementException e){
             return false;
         }
     }
     @GetMapping(path = "/move/{boardId}/{fieldIndex}")
-    public Board makeMove(@PathVariable("boardId") String boardId, @PathVariable("fieldIndex") String fieldIndex) {
+    public boolean makeMove(@PathVariable("boardId") String boardId, @PathVariable("fieldIndex") String fieldIndex) {
         try{
             Board board = boardService.getBoardFromId(boardId).orElseThrow();
             board.makeMove(fieldIndex);
             boardService.updateBoard(board);
-            return board;
+            simpMessagingTemplate.convertAndSend("/topic/gameplay/" + boardId, board);
+            System.out.println("should be sent");
+            return true;
         } catch (NoSuchElementException e){
-            return null;
+            return false;
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.viarus.tictoetoe.board;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
@@ -13,14 +12,14 @@ public class Board {
     private List<String> fields;
     private List<String> playerNames;
     private String nowMoving;
-    private boolean finished = false;
+    private String state = "false";
 
     public Board() {
     }
 
-    public Board(List<String> fields, List<String> playerNames, String nowMoving, boolean finished) {
+    public Board(List<String> fields, List<String> playerNames, String nowMoving, String state) {
         this.fields = fields;
-        this.finished = finished;
+        this.state = state;
         this.playerNames = playerNames;
         this.nowMoving = nowMoving;
     }
@@ -37,12 +36,12 @@ public class Board {
         this.playerNames = playerNames;
     }
 
-    public boolean isFinished() {
-        return finished;
+    public String getState() {
+        return state;
     }
 
-    public void setFinished(boolean finished) {
-        this.finished = finished;
+    public void setState(String finished) {
+        this.state = finished;
     }
 
     public List<String> getFields() {
@@ -72,18 +71,20 @@ public class Board {
                         player ids:
                         %s
                         %s
+                        %s
                         now moving: %s""",
                 id,
                 fields.get(0), fields.get(1), fields.get(2),
                 fields.get(3), fields.get(4), fields.get(5),
                 fields.get(6), fields.get(7), fields.get(8),
                 playerNames.get(0), playerNames.get(1),
+                state,
                 nowMoving
         );
     }
 
     public void makeMove(String fieldIndex) {
-        fields.set(Integer.valueOf(fieldIndex), nowMoving);
+        fields.set(Integer.parseInt(fieldIndex), nowMoving);
         nowMoving = nowMoving.equals("X") ? "O" : "X";
         System.out.println("made move at index " + fieldIndex + " now moving: " + nowMoving);
     }
