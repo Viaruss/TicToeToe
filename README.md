@@ -24,7 +24,8 @@ This project is a multiplayer tic-tac-toe game with a server-sided gameplay and 
 # To Do
 
 * Option to play vs computer at different levels of difficulty using the **MinMax** algorithm
-* Better GUI Cosmetics 
+* Better GUI Cosmetics
+* Frontend code cleanup
 
 # Technologies Used
 
