@@ -1,10 +1,7 @@
 package com.viarus.tictoetoe.board;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -20,7 +17,7 @@ public class BoardController {
         this.boardService = boardService;
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
-    @GetMapping(path = "get/fromPlayer/{playerName}")
+    @GetMapping(path = "{playerName}")
     public Board getBoardFromPlayer(@PathVariable("playerName") String playerName){
         Optional<Board> board = boardService.getBoardFromPlayer(playerName);
         return board.orElse(null);
@@ -30,19 +27,20 @@ public class BoardController {
         return boardService.doesBoardExist(playerName);
     }
 
-    @GetMapping(path = "get/new/{playerName}")
-    public Board createBoard(@PathVariable("playerName") String playerName){
+    @PostMapping()
+    public boolean createBoard(@RequestBody String playerName){
         Board board = new Board(
                 List.of("","","","","","","","",""),
-				List.of(playerName),
+				List.of(playerName.substring(1, playerName.length()-1)),
 				"X",
 				""
         );
         boardService.createBoard(board);
-        return board;
+        return true;
     }
-    @GetMapping(path = "/joinGame/{playerName}/{joiningPlayerName}")
-    public boolean joinGame(@PathVariable("playerName") String playerName, @PathVariable("joiningPlayerName") String joiningPlayerName) {
+    @PostMapping(path = "/{playerName}")
+    public boolean joinGame(@PathVariable("playerName") String playerName, @RequestBody() String joiningPlayerName) {
+        joiningPlayerName = joiningPlayerName.substring(1, joiningPlayerName.length()-1);
         try{
             Board board = boardService.getBoardFromPlayer(playerName).orElseThrow();
             board.setPlayerNames(List.of(playerName, joiningPlayerName));
@@ -53,8 +51,9 @@ public class BoardController {
             return false;
         }
     }
-    @GetMapping(path = "/move/{boardId}/{fieldIndex}")
-    public boolean makeMove(@PathVariable("boardId") String boardId, @PathVariable("fieldIndex") String fieldIndex) {
+    @PostMapping(path = "/move/{boardId}")
+    public boolean makeMove(@PathVariable("boardId") String boardId, @RequestBody() String fieldIndex) {
+        fieldIndex = fieldIndex.substring(1, fieldIndex.length()-1);
         try{
             Board board = boardService.getBoardFromId(boardId).orElseThrow();
             board.makeMove(fieldIndex);

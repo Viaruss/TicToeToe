@@ -1,3 +1,7 @@
+//TODO:
+// proper socket closing,
+// code cleanup,
+// remove redundant requests
 $(document).ready(function() {
 
     let board, yourTurn, yourName, stompClient
@@ -10,7 +14,7 @@ $(document).ready(function() {
             let exists = await doesBoardExist(yourName)
             if(exists){
                 await updateBoard(yourName)
-                await assertTurns()
+                await prepareBoard()
                 $("#popUpBox").fadeOut()
                 $(".board").fadeIn()
             } else {
@@ -21,12 +25,12 @@ $(document).ready(function() {
     })
 
     $("#newGameButton").click(async function(){
-        const response = await fetch("http://localhost:8080/api/v1/board/get/new/" + yourName)
-        if(!response.ok){
+        const response = await post(yourName, "http://localhost:8080/api/v1/board")
+        if(!response){
             alert("something went wrong, try again")
         } else {
             await updateBoard(yourName)
-            await assertTurns()
+            await prepareBoard()
             $("#noBoardBox").fadeOut()
             $(".board").fadeIn()
         }
@@ -45,12 +49,10 @@ $(document).ready(function() {
             const found = await doesBoardExist(opponentName)
             if(found){
                 if(await updateBoard(opponentName)){
-                    const response = await fetch("http://localhost:8080/api/v1/board/joinGame/" + opponentName +
-                        "/" + yourName)
-                    let success = await response.json()
+                    let success = await post(yourName, "http://localhost:8080/api/v1/board/" + opponentName)
                     if(success){
                         await updateBoard(yourName)
-                        await assertTurns()
+                        await prepareBoard()
                         $("#joinGameBox").fadeOut()
                         $(".board").fadeIn()
                     } else {
@@ -91,18 +93,17 @@ $(document).ready(function() {
 
     async function makeMove(atId){
         if (board["state"] === ""){
-            let response = await fetch("http://localhost:8080/api/v1/board/move/" + board["id"] + "/" + atId)
-            let json = await response.json()
-            return json !== undefined;
+            let response = await post(atId, "http://localhost:8080/api/v1/board/move/" + board["id"])
+            return response !== undefined;
         }
         return false
     }
 
     async function doesBoardExist(playerName) {
-        let response = await fetch("http://localhost:8080/api/v1/board/ifExists/fromPlayer/" + playerName)
+        let response = await fetch("http://localhost:8080/api/v1/board/exist/" + playerName)
         return await response.json()
     }
-    function assertTurns(){
+    function prepareBoard(){
         yourTurn = ["X", "O"].at(board["playerNames"].indexOf(yourName))
         $("#player1").text(board["playerNames"][0] + " - X")
         $("#player2").text((board["playerNames"][1] !== undefined ? board["playerNames"][1] : "player 2") + " - O") //insert placeholder "player 2" if second player is not present yet
@@ -110,7 +111,7 @@ $(document).ready(function() {
     }
 
     async function updateBoard(playerName){
-        let response = await fetch("http://localhost:8080/api/v1/board/get/fromPlayer/" + playerName)
+        let response = await fetch("http://localhost:8080/api/v1/board/" + playerName)
         let json = await response.json()
         if(json["playerNames"].length < 2 || json["playerNames"].includes(yourName)){
             syncData(json)
@@ -147,11 +148,22 @@ $(document).ready(function() {
         })
     }
 
-//temp
-
     $("#reset").click(function clearBoard() {
         $("#noBoardBox").fadeIn()
         $(".board").fadeOut()
         $("#reset").fadeOut();
     })
+
+    async function post(data, endpoint) {
+        try {
+            const response = await fetch(endpoint, {
+                method: "POST",
+                body: JSON.stringify(data),
+            });
+            const result = await response.json();
+            return await result
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
 })
