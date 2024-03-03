@@ -42,8 +42,8 @@ This project is a multiplayer tic-tac-toe game with a server-sided gameplay and 
 ## Setup
 
 1. [x] Set up a MongoDb database using Docker Image or Regular server, then change **resources/application.properties** credentials if needed
-2. [x] Start the **TicTacToeApplication** to run game server
-3. [x] By default, the game will be running on http://localhost:8080
+2. [x] Start the **TicTacToeApplication** or use provided .jar file (if using default settings) to run game server
+3. [x] By default, the game will be running on http://localhost:8080, connect and play!
 
 ## How To Play
 
