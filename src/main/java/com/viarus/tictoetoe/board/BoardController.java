@@ -20,21 +20,12 @@ public class BoardController {
         this.boardService = boardService;
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
-    @GetMapping(path = "getAll")
-    public List<Board> getAllBoards(){
-        return boardService.getAllBoards();
-    }
-    @GetMapping(path = "get/fromId/{boardId}")
-    public Board getBoardFromId(@PathVariable("boardId") String boardId){
-        Optional<Board> board = boardService.getBoardFromId(boardId);
-        return board.orElse(null);
-    }
     @GetMapping(path = "get/fromPlayer/{playerName}")
     public Board getBoardFromPlayer(@PathVariable("playerName") String playerName){
         Optional<Board> board = boardService.getBoardFromPlayer(playerName);
         return board.orElse(null);
     }
-    @GetMapping(path = "ifExists/fromPlayer/{playerName}")
+    @GetMapping(path = "exist/{playerName}")
     public boolean checkIfExists(@PathVariable("playerName") String playerName) {
         return boardService.doesBoardExist(playerName);
     }
