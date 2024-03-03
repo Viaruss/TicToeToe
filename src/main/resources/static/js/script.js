@@ -1,7 +1,4 @@
-//TODO:
-// proper socket closing,
-// code cleanup,
-// remove redundant requests
+//TODO: code cleanup
 $(document).ready(function() {
 
     let board, yourTurn, yourName, stompClient
@@ -143,6 +140,7 @@ $(document).ready(function() {
                         $("#title").text(winner + " is the winner!")
                     }
                     $("#reset").fadeIn()
+                    stompClient.disconnect()
                 }
             })
         })
