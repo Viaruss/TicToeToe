@@ -25,8 +25,11 @@ This project is a multiplayer tic-tac-toe game with a server-sided gameplay and 
 
 * Option to play vs computer at different levels of difficulty using the **MinMax** algorithm
 * Better GUI Cosmetics
+* Rename endpoints according to REST principles
 * Frontend code cleanup
   * change unsuitable get requests to proper post requests 
+  * remove redundant requests
+  * close socket after the game is over
 
 # Technologies Used
 
