@@ -92,14 +92,14 @@ public class Board {
         String temp1, temp2;
         for(int i = 0; i < 3; i++){
             temp1 = fields.get(i*3);
-            if(temp1.isEmpty()) continue;
-            for (int j = 1; j < 3; j++){
+            for (int j = 0; j < 3; j++){
+                if(temp1.isEmpty()) continue;
                 if(!fields.get(i*3+j).equals(temp1)) break;
                 if(j==2) return temp1;
             }
             temp2 = fields.get(i);
-            if(temp2.isEmpty()) continue;
             for (int j = 0; j < 3; j++){
+                if(temp2.isEmpty()) continue;
                 if(!fields.get(i+j*3).equals(temp2)) break;
                 if(j==2) return temp2;
             }
