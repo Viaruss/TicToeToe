@@ -152,5 +152,6 @@ $(document).ready(function() {
     $("#reset").click(function clearBoard() {
         $("#noBoardBox").fadeIn()
         $(".board").fadeOut()
+        $("#reset").fadeOut();
     })
 })
